@@ -52,7 +52,9 @@ class TimeTable (gym.Env):
   }
 
   LESSON_NAME = {
-    1 : '現0', # 1  現代文 週3
+    -1: '禁 ', # 1  現代文 週3
+    0 : '未 ', # 1  現代文 週3
+    1 : '現0', # 1  現代文 週3
     2 : '古0', # 2  古典 週2
     3 : '漢0', # 3  漢文 週1
     4 : '数0', # 4  数学 週6 教師A
@@ -248,7 +250,7 @@ class TimeTable (gym.Env):
     """
     # human の場合はコンソールに出力。ansiの場合は StringIO を返す
     outfile = StringIO() if mode == 'ansi' else sys.stdout
-    outfile.write('\n'.join(' '.join(self.LESSON_NAME[elem] for elem in row) for row in self.table) + '\n' + \
+    outfile.write('\n'.join(' '.join(self.LESSON_NAME[int(elem)] for elem in row) for row in self.table) + '\n' + \
       'total:' + str(self.total) + '\n' + \
       'damage:' + str(self.damage) + '\n' + \
       'lesson:' + str(self.TOTAL_LESSON - self.progress) + '\n')
