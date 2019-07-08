@@ -148,11 +148,17 @@ class TimeTable (gym.Env):
       table = self.table.copy()
       shape = table.shape
       table = table.reshape(1, shape[0] * shape[1])
-      table[0][pos] = lesson
-      self.table = table.reshape(shape)
+      if table[0][pos] == lesson:
+        table[0][pos] = 0
+        self.table = table.reshape(shape)
+        self.progress -= 1
+        moved = None
+      else:
+        table[0][pos] = lesson
+        self.table = table.reshape(shape)
+        self.progress += 1
+        moved = True
       self.damage = 0
-      self.progress += 1
-      moved = True
     else:
       moved = False
     
@@ -177,6 +183,8 @@ class TimeTable (gym.Env):
     """
     pass
   def _get_reward(self, moved):
+    if moved is None:
+      return -10
     if moved:
       # 特典の計算。授業が分散されて配置できていると高得点になるようにしたいけど効率的な判定方法分からないので一旦スルー
       # return self.progress
@@ -184,7 +192,7 @@ class TimeTable (gym.Env):
     else:
       return 0
   def _get_damage(self, moved):
-    if moved:
+    if moved or moved is None:
       return 0
     else:
       return 1
@@ -200,9 +208,11 @@ class TimeTable (gym.Env):
     if table[0][pos] == -1:
       return False
     # すでに配置済みのところには配置できない
-    if table[0][pos] > 0:
+    if table[0][pos] != lesson and table[0][pos] > 0:
       return False
     # 更新をしてみる
+    if table[0][pos] == lesson:
+      return True
     table[0][pos] = lesson
     table = table.reshape(shape)
     tableT = table.T

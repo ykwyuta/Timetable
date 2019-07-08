@@ -11,7 +11,7 @@ from rl.agents.dqn import DQNAgent
 from rl.policy import BoltzmannQPolicy
 from rl.memory import SequentialMemory
 
-ENV_NAME = 'timetable-v0001'
+ENV_NAME = 'timetable-case0000-v0001'
 
 # Get the environment and extract the number of actions.
 env = gym.make(ENV_NAME)
